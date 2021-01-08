@@ -1,2 +1,2 @@
 include versioneer.py
-include ams/_version.py
+include brainy/_version.py

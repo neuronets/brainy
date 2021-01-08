@@ -11,7 +11,7 @@ import nobrainer
 import numpy as np
 import tensorflow as tf
 
-#from brainy import __version__
+from brainy import __version__
 
 _REQUIRED_SHAPE = (256, 256, 256)
 _BLOCK_SHAPE = (128, 128, 128)
@@ -23,7 +23,7 @@ _BLOCK_SHAPE = (128, 128, 128)
 @click.option('-b', '--batch-size', type=int, default=1, help='Batch size during prediction.')
 @click.option('-t', '--threshold', type=float, default=0.3, help='Threshold for binarization of predictions.')
 @click.option('-m', '--model-file', type=click.Path(exists=True), envvar='BRAINY_MODEL_FILE', help='Path to Keras model.')
-#@click.version_option(version=__version__)
+@click.version_option(version=__version__)
 def predict(*, infile, outprefix, batch_size, threshold, model_file):
     """Extracts brain in a 3D T1-weighted contrast-enhanced MRI using a trained deep neural network.
 

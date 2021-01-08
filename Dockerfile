@@ -1,0 +1,56 @@
+FROM continuumio/conda-ci-linux-64-python3.8:latest as base
+
+ARG BRAINY_COMMITISH="19e69299"
+
+USER root
+
+RUN apt-get update \
+    && apt-get install --yes --quiet --no-install-recommends \
+        ca-certificates \
+        git \
+        libgomp1 \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN conda install -c conda-forge --yes git-annex && conda clean --all
+
+RUN pip install --quiet --no-cache-dir datalad datalad-osf
+
+WORKDIR /opt/neuronets/trained-models
+ENV BRAINY_MODEL_FILE="/opt/neuronets/trained-models/neuronets/brainy/0.1.0/brain-extraction-unet-128iso-model.h5"
+
+RUN datalad clone https://github.com/neuronets/trained-models.git . \
+    && git config user.name "brainy" \ 
+    && git config user.email "brainy" \   
+    && datalad get -s osf-storage "$BRAINY_MODEL_FILE" \
+    && git checkout "$BRAINY_COMMITISH"
+
+
+FROM python:3.8-slim
+ARG DEBIAN_FRONTEND="noninteractive"
+
+COPY --from=base /opt/neuronets/trained-models /opt/neuronets/trained-models
+
+ENV LANG="C.UTF-8" \
+    LC_ALL="C.UTF-8"
+
+RUN apt-get update \
+    && apt-get install --yes --quiet --no-install-recommends \
+        ca-certificates \
+        libgomp1 \
+        git \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /opt/neuronets/brainy
+COPY . .
+
+ENV BRAINY_MODEL_FILE="/opt/neuronets/trained-models/neuronets/brainy/0.1.0/brain-extraction-unet-128iso-model.h5"
+
+# Only difference between this and gpu Dockerfile is this line.
+RUN pip install --no-cache-dir --editable .[cpu]
+
+ENV FREESURFER_HOME="/opt/neuronets/brainy/freesurfer"
+ENV PATH="$FREESURFER_HOME/bin:$PATH"
+
+WORKDIR /data
+ENTRYPOINT ["brainy"]
+LABEL maintainer="Hoda Rajaei <rajaei.hoda@gmail.com>"
