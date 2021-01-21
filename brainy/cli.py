@@ -38,14 +38,14 @@ def predict(*, infile, outprefix, batch_size, threshold, model_file):
     msg = '\n' + '*' * len(msg) + '\n' + msg + '\n' + '*' * len(msg) + '\n'
     click.echo(click.style(msg, fg='red'))
 
-    # try:
-    #     latest = etelemetry.get_project("neuronets/brainy")
-    # except RuntimeError as e:
-    #     print("Could not check for version updates: ", e)
-    # else:
-    #     if latest and 'version' in latest:
-    #         print(f"Your version: {__version__}")
-    #         print(f"Latest version: {latest['version']}\n")
+    try:
+        latest = etelemetry.get_project("neuronets/brainy")
+    except RuntimeError as e:
+        print("Could not check for version updates: ", e)
+    else:
+        if latest and 'version' in latest:
+            print(f"Your version: {__version__}")
+            print(f"Latest version: {latest['version']}\n")
 
     _orig_infile = infile
 

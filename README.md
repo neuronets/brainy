@@ -6,13 +6,17 @@ This model achieved a median Dice score of 0.97, mean of 0.96, minimum of 0.91, 
 
 This model was trained for five epochs on a dataset of 10,000 T1-weighted brain scans comprised of both public and private data. The ground truth labels were binarized FreeSurfer segmentations (i.e., binarized `aparc+aseg.mgz`). All volumes were size 256x256x256 and had 1mm isotropic voxel sizes. Because the full volumes could not fit into memory during training, each volume was separated into non-overlapping blocks of size 128x128x128, and training was performed on blocks in batches of two. The Jaccard loss function was used. During training, approximately 50% of the volumes were augmented with random rigid transformations. That is to say, 50% of the data was rotated and translated randomly in three dimensions (the transformation for pairs of features and labels was the same). The augmented features were interpolated linearly, and the augmented labels were interpolated with nearest neighbor. Each T1-weighted volume was standard scored (i.e., Z-scored) prior to training.
 
+![Predicted brain mask on T1-weighted brain scan](/images/brain-extraction/unet-best-prediction.png)
+
+![Predicted brain mask on T1-weighted brain scan with motion](/images/brain-extraction/unet-worst-prediction.png)
+
 ```diff
 ! CAUTION: this tool is not a medical product and is only intended for research purposes. !
 ```
 
 ## Requirements for use
 
-- Input data should be gadolinium contrast-enhanced T1-weighted magnetic resonance images. The model was trained and evaluated on this type of data.
+- Input data should be T1-weighted magnetic resonance images. The model was trained and evaluated on this type of data.
 - CPU or, optionally, GPU
   - Runtime will be much faster when a GPU is available. Please see the Singularity usage example below for running the model on a GPU.
 
