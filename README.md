@@ -31,14 +31,14 @@ singularity pull docker://neuronets/brainy:latest-gpu
 You have a few options when running the image. To see them call help.
 
 ```
-singularity run --cleanenv --bind $(pwd):/data -W /data --nv ams_latest-gpu.sif --help
+singularity run --cleanenv --bind $(pwd):/data -W /data --nv brainy_latest-gpu.sif --help
 ```
 
 Here is an example.
 
 ```
 singularity run --cleanenv --bind $(pwd):/data -W /data --nv \
-    ams_latest-gpu.sif T1_001.nii.gz output
+    brainy_latest-gpu.sif T1_001.nii.gz output
 ```
 
 This will generate two files `output.nii.gz` and `output_orig.nii.gz`. The first is the mask in conformed FreeSurfer space. The second is the mask in the original input space.
